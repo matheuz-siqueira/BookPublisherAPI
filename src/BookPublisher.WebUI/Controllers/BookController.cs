@@ -75,7 +75,7 @@ public class BookController : BookPublisherController
         }
         catch
         {
-            return BadRequest( new { message = "Invalid request/internal error server" });
+            return BadRequest();
         }
     }
 

@@ -9,4 +9,5 @@ public class GetBookResponseJson
     public int Quantity { get; set; }
     public DateOnly LaunchDate { get; set; }
     public decimal Price { get; set; }
+    public List<GetAuthorPerBookResponseJson> Authors { get; set; }
 }
