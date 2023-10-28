@@ -1,3 +1,4 @@
+using BookPublisher.Application.Converter;
 using BookPublisher.Infra.IoC; 
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,7 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddInfrastructure(builder.Configuration);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(option => 
+{
+    option.JsonSerializerOptions.Converters.Add(new DateOnlyJsonConverter());
+});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
