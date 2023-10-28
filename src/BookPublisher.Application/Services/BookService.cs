@@ -70,6 +70,18 @@ public class BookService : IBookService
         }
         await _repository.RemoveAsync(book);
     }
+
+    public async Task UpdateAsync(UpdateBookRequestJson request, long id)
+    {
+        var book = await _repository.GetByIdTracking(id); 
+        if(book is null)
+        {
+            throw new NotFoundException("book not found.");
+        }
+        _mapper.Map(request, book);
+        await _repository.Update(); 
+    }
+
     private async Task<List<long>> ListAuthors(List<RegisterAuthorIdRequestJson> authorsIds)
     {
         var list = new List<long>();

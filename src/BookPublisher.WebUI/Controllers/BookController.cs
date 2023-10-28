@@ -75,9 +75,28 @@ public class BookController : BookPublisherController
         }
         catch
         {
-            return BadRequest("Invalid request/internal error server");
+            return BadRequest( new { message = "Invalid request/internal error server" });
         }
     }
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult> UpdateBook(UpdateBookRequestJson request, long id)
+    {
+        try 
+        {
+            await _service.UpdateAsync(request, id);
+            return NoContent(); 
+        }   
+        catch(NotFoundException e)
+        {
+            return NotFound(new { message = e.Message });
+        }
+        catch
+        {
+            return BadRequest(new { message = "Invalid request/internal error server"});
+        }
+    }
+
 
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteBook(long id)
@@ -93,7 +112,7 @@ public class BookController : BookPublisherController
         }
         catch
         {
-            return BadRequest("Invalid request/internal error server");
+            return BadRequest( new { message ="Invalid request/internal error server" });
         }
     }
    
