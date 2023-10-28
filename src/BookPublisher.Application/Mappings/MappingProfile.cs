@@ -31,8 +31,12 @@ public class MappingProfile : Profile
     private void EntityToRequest()
     {
         CreateMap<Author, AuthorResponseJson>();
+
+        CreateMap<Author, GetAuthorPerBookResponseJson>();
+        
         CreateMap<Book, BookResponseJson>();
         CreateMap<Book, GetBooksResponseJson>();
-        CreateMap<Book, GetBookResponseJson>();
+
+        CreateMap<Book, GetBookResponseJson>(); 
     }
 }

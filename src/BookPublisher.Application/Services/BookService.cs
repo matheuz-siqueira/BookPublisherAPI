@@ -58,7 +58,11 @@ public class BookService : IBookService
         {
             throw new NotFoundException("book not found.");
         }
+
+        var list = await GetAuthors(book.AuthorPerBooks);  
         var response = _mapper.Map<GetBookResponseJson>(book);
+        
+        response.Authors = _mapper.Map<List<GetAuthorPerBookResponseJson>>(list);
         return response;
     }
     public async Task DeleteAsync(long id)
@@ -110,5 +114,16 @@ public class BookService : IBookService
     {
         var isDistinct = ids.GroupBy(x => x).All(g => g.Count() == 1);
         return isDistinct;
+    }
+
+    private async Task<List<Author>> GetAuthors(List<AuthorPerBook> list)
+    {
+        var authors = new List<Author>(); 
+        foreach(var author in list)
+        {
+            var result = await _authorRepository.GetByIdAsync(author.AuthorId);
+            authors.Add(result); 
+        }
+        return authors;
     }
 }
