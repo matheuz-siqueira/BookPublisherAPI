@@ -49,5 +49,52 @@ public class BookController : BookPublisherController
             return BadRequest(new { message = "Invalid request/internal error server" });
         }
     }
+
+    [HttpGet]
+    public async Task<ActionResult> GetAllBooks()
+    {
+        var response = await _service.GetAllAsync(); 
+        if(!response.Any())
+        {
+            return NoContent();
+        }
+        return Ok(response);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult> GetBook(long id)
+    {
+        try 
+        {
+            var response = await _service.GetByIdAsync(id);
+            return Ok(response); 
+        }
+        catch(NotFoundException e)
+        {
+            return NotFound(new { message = e.Message });
+        }
+        catch
+        {
+            return BadRequest("Invalid request/internal error server");
+        }
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> DeleteBook(long id)
+    {
+        try 
+        {   
+            await _service.DeleteAsync(id); 
+            return NoContent(); 
+        }
+        catch(NotFoundException e)
+        {
+            return NotFound(new { message = e.Message });
+        }
+        catch
+        {
+            return BadRequest("Invalid request/internal error server");
+        }
+    }
    
 }

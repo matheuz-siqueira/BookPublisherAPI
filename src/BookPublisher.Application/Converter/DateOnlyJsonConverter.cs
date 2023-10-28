@@ -12,7 +12,7 @@ public sealed class DateOnlyJsonConverter : JsonConverter<DateOnly>
 
     public override void Write(Utf8JsonWriter writer, DateOnly value, JsonSerializerOptions options)
     {
-        var isoDate = value.ToString("0");
+        var isoDate = value.ToString("yyyy-MM-dd");
         writer.WriteStringValue(isoDate);
     }
 }

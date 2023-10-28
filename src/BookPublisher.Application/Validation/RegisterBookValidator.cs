@@ -10,10 +10,7 @@ public class RegisterBookValidator : AbstractValidator<RegisterBookRequestJson>
     {
         RuleFor(t => t.Title).NotEmpty().WithMessage("title is required")
             .MinimumLength(5).WithMessage("title must have at least 5 characters")
-            .MaximumLength(50).WithMessage("title must have a maximum of 50 characters"); 
-
-        RuleFor(t => t.SubTitle).MinimumLength(5).WithMessage("subtitle must have at least 5 characters")
-            .MaximumLength(50).WithMessage("subtitle must have a maximum of 50 characters"); 
+            .MaximumLength(50).WithMessage("title must have a maximum of 50 characters");
         
         RuleFor(t => t.Price).NotEmpty().WithMessage("price is required")
             .GreaterThan(0).WithMessage("price must be greater than zero"); 
