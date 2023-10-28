@@ -5,8 +5,8 @@ namespace BookPublisher.Application.Interfaces;
 public interface IBookService
 {
     Task<BookResponseJson> CreateAsync(RegisterBookRequestJson request); 
-    // Task<BookResponseJson> GetByIdAsync(long id); 
-    // Task<IEnumerable<BookResponseJson>> GetAllAsync();
+    Task<GetBookResponseJson> GetByIdAsync(long id); 
+    Task<IEnumerable<GetBooksResponseJson>> GetAllAsync();
     // Task UpdateAsync(UpdateBookRequestJson request, long id); 
-    // Task Delete(long id);   
+    Task DeleteAsync(long id);   
 }

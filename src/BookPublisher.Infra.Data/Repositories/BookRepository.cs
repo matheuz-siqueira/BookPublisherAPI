@@ -26,7 +26,8 @@ public class BookRepository : IBookRepository
 
     public Task<Book> GetByIdAsync(long id)
     {
-        return _context.Books.AsNoTracking().FirstOrDefaultAsync(b => b.Id == id); 
+        return _context.Books.AsNoTracking()
+            .FirstOrDefaultAsync(b => b.Id == id); 
     }
 
     public Task<Book> GetByIdTracking(long id)

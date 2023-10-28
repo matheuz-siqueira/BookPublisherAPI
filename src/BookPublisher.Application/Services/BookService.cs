@@ -44,6 +44,32 @@ public class BookService : IBookService
 
     }
 
+    public async Task<IEnumerable<GetBooksResponseJson>> GetAllAsync()
+    {
+        var books = await _repository.GetAllAsync(); 
+        var response = _mapper.Map<IEnumerable<GetBooksResponseJson>>(books);
+        return response;
+    }
+
+    public async Task<GetBookResponseJson> GetByIdAsync(long id)
+    {
+        var book = await _repository.GetByIdAsync(id); 
+        if(book is null)
+        {
+            throw new NotFoundException("book not found.");
+        }
+        var response = _mapper.Map<GetBookResponseJson>(book);
+        return response;
+    }
+    public async Task DeleteAsync(long id)
+    {
+        var book = await _repository.GetByIdAsync(id);
+        if(book is null)
+        {
+            throw new NotFoundException("book not found.");
+        }
+        await _repository.RemoveAsync(book);
+    }
     private async Task<List<long>> ListAuthors(List<RegisterAuthorIdRequestJson> authorsIds)
     {
         var list = new List<long>();
@@ -73,5 +99,4 @@ public class BookService : IBookService
         var isDistinct = ids.GroupBy(x => x).All(g => g.Count() == 1);
         return isDistinct;
     }
-   
 }

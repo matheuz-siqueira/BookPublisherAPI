@@ -32,5 +32,7 @@ public class MappingProfile : Profile
     {
         CreateMap<Author, AuthorResponseJson>();
         CreateMap<Book, BookResponseJson>();
+        CreateMap<Book, GetBooksResponseJson>();
+        CreateMap<Book, GetBookResponseJson>();
     }
 }
