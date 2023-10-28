@@ -3,11 +3,12 @@ using BookPublisher.Domain.DomainValidation;
 
 namespace BookPublisher.Domain.Entities;
 
-public class Author : BaseEntity
+public sealed class Author : BaseEntity
 {
     public string FirstName { get; private set; }
     public string LastName { get; private set; }
     public string Gender { get; private set; }
+    public List<AuthorPerBook> AuthorPerBooks { get; set; }
 
     public Author(string firstName, string lastName, string gender)
     {

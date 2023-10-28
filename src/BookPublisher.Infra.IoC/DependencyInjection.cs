@@ -1,4 +1,5 @@
 using BookPublisher.Application.Dtos.Author;
+using BookPublisher.Application.Dtos.Book;
 using BookPublisher.Application.Interfaces;
 using BookPublisher.Application.Mappings;
 using BookPublisher.Application.Services;
@@ -40,11 +41,14 @@ public static class DependencyInjection
     private static void AddRepositories(this IServiceCollection services)
     {
         services.AddScoped<IAuthorRepository, AuthorRepository>(); 
+        services.AddScoped<IBookRepository, BookRepository>();
+        services.AddScoped<IAuthorPerBookRepository, AuthorPerBookRepository>();
     }
 
     private static void AddServices(this IServiceCollection services)
     {
         services.AddScoped<IAuthorService, AuthorService>();
+        services.AddScoped<IBookService, BookService>(); 
     }
 
     private static void AddMapper(this IServiceCollection services)
@@ -56,5 +60,6 @@ public static class DependencyInjection
     {
         services.AddScoped<IValidator<RegisterAuthorRequestJson>, RegisterAuthorValidator>();
         services.AddScoped<IValidator<UpdateAuthorRequestJson>, UpdateAuthorValidator>();
+        services.AddScoped<IValidator<RegisterBookRequestJson>, RegisterBookValidator>();
     }
 }
