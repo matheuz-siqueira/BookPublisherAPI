@@ -1,12 +1,16 @@
 using BookPublisher.Application.Converter;
 using BookPublisher.Infra.IoC; 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Rewrite;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddSwagger();
+builder.Services.AddInfraCors();
+
 
 builder.Services.AddControllers().AddJsonOptions(option => 
 {
@@ -35,11 +39,20 @@ builder.Services.AddVersionedApiExplorer(c =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment()) {}
+
+app.UseCors();
+
+app.UseSwagger();
+app.UseSwaggerUI(c => 
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "BookPublisherAPI - v1");
+});
+
+
+var option = new RewriteOptions();
+option.AddRedirect("^$", "swagger");
+app.UseRewriter(option);
 
 app.UseHttpsRedirection();
 
