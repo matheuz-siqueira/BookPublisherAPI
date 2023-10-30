@@ -1,8 +1,10 @@
 using BookPublisher.Application.Dtos.User;
+using BookPublisher.Application.Exceptions.BookPublisherExceptions;
 using BookPublisher.Application.Exceptions.ValidatorsExceptions;
 using BookPublisher.Application.Interfaces;
 using BookPublisher.Domain.DomainValidation;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookPublisher.WebUI.Controllers;
@@ -20,7 +22,7 @@ public class UserController : BookPublisherController
     }
 
     [HttpPost]
-    public async Task<ActionResult> PostUser(RegisterUserRequestJon request)
+    public async Task<ActionResult> RegisterUser(RegisterUserRequestJon request)
     {
 
         var result = _validatorRegisterUser.Validate(request);
@@ -36,6 +38,25 @@ public class UserController : BookPublisherController
         catch(DomainExceptionValidation e)
         {
             return BadRequest(new { message = e.Message });
+        }
+    }
+
+    [Authorize]
+    [HttpGet]
+    public async Task<ActionResult> GetProfileAsync()
+    {
+        try 
+        {
+            var response = await _service.GetProfileAsync();
+            return Ok(response);
+        }
+        catch(NotFoundException e)
+        {
+            return NotFound(new { message = e.Message }); 
+        }
+        catch
+        {
+            return BadRequest();
         }
     }
 }
