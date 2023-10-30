@@ -22,9 +22,11 @@ public class User : BaseEntity
         
     }
 
-    public void Update(string userName, string password, string fullName)
+    public void UpdatePassword(string password)
     {
-        ValidationDomain(userName, password, fullName);      
+        DomainExceptionValidation.When(string.IsNullOrEmpty(password), "password is required");
+        DomainExceptionValidation.When(password.Length < 8, "username must have at least 8 characters");
+        Password = password;
     }
 
     private void ValidationDomain(string userName, string password, string fullName)
@@ -38,7 +40,7 @@ public class User : BaseEntity
         DomainExceptionValidation.When(userName.Length > 40, "fullname must have a maximum of 40 characters");
 
         DomainExceptionValidation.When(string.IsNullOrEmpty(password), "password is required");
-        DomainExceptionValidation.When(userName.Length < 6, "username must have at least 8 characters");
+        DomainExceptionValidation.When(password.Length < 8, "username must have at least 8 characters");
     
         UserName = userName; 
         Password = password; 
