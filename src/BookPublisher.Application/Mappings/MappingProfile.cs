@@ -1,6 +1,7 @@
 using AutoMapper;
 using BookPublisher.Application.Dtos.Author;
 using BookPublisher.Application.Dtos.Book;
+using BookPublisher.Application.Dtos.User;
 using BookPublisher.Domain.Entities;
 
 namespace BookPublisher.Application.Mappings;
@@ -11,6 +12,7 @@ public class MappingProfile : Profile
     {
         RequestToEntity();
         EntityToRequest();
+        RequestToRequest();
     }
 
     private void RequestToEntity()
@@ -26,6 +28,8 @@ public class MappingProfile : Profile
         CreateMap<RegisterBookRequestJson, Book>()
             .ConstructUsing(x => new Book(x.Title, x.Edition, x.LaunchDate, 
                 x.Price, x.Quantity));
+
+        CreateMap<RegisterUserRequestJon, User>();
     
     }
     private void EntityToRequest()
@@ -38,5 +42,10 @@ public class MappingProfile : Profile
         CreateMap<Book, GetBooksResponseJson>();
 
         CreateMap<Book, GetBookResponseJson>(); 
+    }
+
+    private void RequestToRequest()
+    {
+        CreateMap<RegisterUserRequestJon, AuthenticationRequestJson>();
     }
 }
