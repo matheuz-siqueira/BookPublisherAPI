@@ -1,4 +1,5 @@
 using AutoMapper;
+using BookPublisher.Application.Dtos.Author;
 using BookPublisher.Application.Dtos.User;
 using BookPublisher.Application.Exceptions.BookPublisherExceptions;
 using BookPublisher.Application.Interfaces;
@@ -46,5 +47,22 @@ public class UserService : IUserService
         var response = _mapper.Map<GetProfileResponseJson>(user); 
         return response;
 
+    }
+
+    public async Task UpdatePasswordAsync(UpdatePasswordRequestJson request)
+    {
+        var id = _logged.GetCurrentUserId(); 
+        var user = await _repository.GetByIdTracking(id); 
+        if(user is null)
+        {
+            throw new NotFoundException("user not found");
+        }
+        if(!BCrypt.Net.BCrypt.Verify(request.CurrentPassword, user.Password))
+        {
+            throw new IncorretPasswordException("incorret current password"); 
+        }
+        request.NewPassword = BCrypt.Net.BCrypt.HashPassword(request.NewPassword); 
+        user.UpdatePassword(request.NewPassword); 
+        await _repository.UpdatePasswordAync();  
     }
 }

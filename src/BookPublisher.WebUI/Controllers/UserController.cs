@@ -1,3 +1,4 @@
+using BookPublisher.Application.Dtos.Author;
 using BookPublisher.Application.Dtos.User;
 using BookPublisher.Application.Exceptions.BookPublisherExceptions;
 using BookPublisher.Application.Exceptions.ValidatorsExceptions;
@@ -14,11 +15,14 @@ public class UserController : BookPublisherController
 {
     private readonly IUserService _service;
     private readonly IValidator<RegisterUserRequestJon> _validatorRegisterUser;
+    private readonly IValidator<UpdatePasswordRequestJson> _validatorUpdatePassword;
     public UserController(IUserService service, 
-        IValidator<RegisterUserRequestJon> validatorRegisterUser)
+        IValidator<RegisterUserRequestJon> validatorRegisterUser, 
+        IValidator<UpdatePasswordRequestJson> validatorUpdatePassword)
     {
         _service = service;
-        _validatorRegisterUser = validatorRegisterUser; 
+        _validatorRegisterUser = validatorRegisterUser;
+        _validatorUpdatePassword = validatorUpdatePassword;  
     }
 
     [HttpPost]
@@ -57,6 +61,35 @@ public class UserController : BookPublisherController
         catch
         {
             return BadRequest();
+        }
+    }
+
+    [Authorize]
+    [HttpPut]
+    public async Task<ActionResult> UpdatePasswordAsync(UpdatePasswordRequestJson request)
+    {
+        var result = _validatorUpdatePassword.Validate(request); 
+        if(!result.IsValid)
+        {
+            return BadRequest(result.Errors.ToCustomValidationFailure());
+        }
+
+        try 
+        {
+            await _service.UpdatePasswordAsync(request); 
+            return NoContent();
+        }
+        catch(NotFoundException e)
+        {
+            return NotFound(new { message = e.Message });
+        }
+        catch(IncorretPasswordException e)
+        {
+            return BadRequest(new { message = e.Message }); 
+        }
+        catch(DomainExceptionValidation e)
+        {
+            return BadRequest(new { message = e.Message });
         }
     }
 }

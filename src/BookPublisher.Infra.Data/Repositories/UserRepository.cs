@@ -26,6 +26,11 @@ public class UserRepository : IUserRepository
             .FirstOrDefaultAsync(u => u.Email == email);
     }
 
+    public async Task<User> GetByIdTracking(long id)
+    {
+        return await _context.Users.FirstOrDefaultAsync(u => u.Id == id); 
+    }
+
     public async Task<User> GetProfileAsync(long id)
     {
         return await _context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == id); 
