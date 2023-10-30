@@ -66,5 +66,6 @@ public static class DependencyInjection
         services.AddScoped<IValidator<UpdateAuthorRequestJson>, UpdateAuthorValidator>();
         services.AddScoped<IValidator<RegisterBookRequestJson>, RegisterBookValidator>();
         services.AddScoped<IValidator<RegisterUserRequestJon>, RegisterUserValidator>();
+        services.AddScoped<IValidator<AuthenticationRequestJson>, AuthenticationValidator>();
     }
 }
