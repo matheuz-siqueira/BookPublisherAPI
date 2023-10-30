@@ -42,6 +42,8 @@ public class MappingProfile : Profile
         CreateMap<Book, GetBooksResponseJson>();
 
         CreateMap<Book, GetBookResponseJson>(); 
+
+        CreateMap<User, GetProfileResponseJson>();
     }
 
     private void RequestToRequest()

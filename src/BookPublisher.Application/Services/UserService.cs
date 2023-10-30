@@ -12,12 +12,14 @@ public class UserService : IUserService
     private readonly IUserRepository _repository;
     private readonly IMapper _mapper;
     private readonly IAuthenticationService _authentication;
+    private readonly IUserLoggedService _logged;
     public UserService(IUserRepository repository, IMapper mapper, 
-        IAuthenticationService authentication)
+        IAuthenticationService authentication, IUserLoggedService logged)
     {
         _repository = repository;
         _mapper = mapper;  
         _authentication = authentication; 
+        _logged = logged;
     }
     public async Task<GetTokenResponseJson> CreateAsync(RegisterUserRequestJon request)
     {
@@ -31,5 +33,18 @@ public class UserService : IUserService
         var user = _mapper.Map<User>(request);
         await _repository.CreateAsync(user); 
         return await _authentication.Login(login); 
+    }
+
+    public async Task<GetProfileResponseJson> GetProfileAsync()
+    {
+        var id =  _logged.GetCurrentUserId();
+        var user = await _repository.GetProfileAsync(id);  
+        if(user is null)
+        {
+            throw new NotFoundException("user not found.");
+        }
+        var response = _mapper.Map<GetProfileResponseJson>(user); 
+        return response;
+
     }
 }

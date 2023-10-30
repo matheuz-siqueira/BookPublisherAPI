@@ -53,6 +53,8 @@ public static class DependencyInjection
         services.AddScoped<IBookService, BookService>(); 
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IAuthenticationService, AuthenticationService>();
+        services.AddHttpContextAccessor();
+        services.AddScoped<IUserLoggedService, UserLoggedService>();
     }
 
     private static void AddMapper(this IServiceCollection services)

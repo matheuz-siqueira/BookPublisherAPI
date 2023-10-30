@@ -1,5 +1,6 @@
 using BookPublisher.Application.Converter;
-using BookPublisher.Infra.IoC; 
+using BookPublisher.Infra.IoC;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Rewrite;
 
@@ -56,6 +57,8 @@ option.AddRedirect("^$", "swagger");
 app.UseRewriter(option);
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
