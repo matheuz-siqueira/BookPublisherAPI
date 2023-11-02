@@ -5,6 +5,7 @@ using BookPublisher.Application.Exceptions.BookPublisherExceptions;
 using BookPublisher.Application.Interfaces;
 using BookPublisher.Domain.Entities;
 using BookPublisher.Domain.Interfaces;
+using BookPublisher.Domain.Pagination;
 
 namespace BookPublisher.Application.Services;
 
@@ -44,11 +45,10 @@ public class BookService : IBookService
 
     }
 
-    public async Task<IEnumerable<GetBooksResponseJson>> GetAllAsync()
+    public PagedList<Book> GetAllAsync(BookParameters bookParameters)
     {
-        var books = await _repository.GetAllAsync(); 
-        var response = _mapper.Map<IEnumerable<GetBooksResponseJson>>(books);
-        return response;
+        var books = _repository.GetAllAsync(bookParameters); 
+        return books;
     }
 
     public async Task<GetBookResponseJson> GetByIdAsync(long id)

@@ -1,5 +1,6 @@
 using BookPublisher.Domain.Entities;
 using BookPublisher.Domain.Interfaces;
+using BookPublisher.Domain.Pagination;
 using BookPublisher.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,9 +28,11 @@ public class AuthorRepository : IAuthorRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<Author>> GetAllAsync()
+    public PagedList<Author> GetAllAsync(AuthorParameters authorParameters)
     {
-        return await _context.Authors.AsNoTracking().ToListAsync();
+        var items = _context.Set<Author>().AsNoTracking(); 
+        return PagedList<Author>.ToPagedList(items.OrderBy(a => a.FirstName), 
+            authorParameters.PageNumber, authorParameters.PageSize);
     }
 
     public Task<Author> GetByIdAsync(long id)

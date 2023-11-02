@@ -1,22 +1,31 @@
+using System.Text.Json;
+using AutoMapper;
 using BookPublisher.Application.Dtos.Book;
 using BookPublisher.Application.Exceptions.BookPublisherExceptions;
 using BookPublisher.Application.Exceptions.ValidatorsExceptions;
 using BookPublisher.Application.Interfaces;
+using BookPublisher.Domain.Pagination;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookPublisher.WebUI.Controllers;
 
+[Authorize]
 [Route("api/v{version:apiVersion}/books")]
 public class BookController : BookPublisherController
 {
     private readonly IBookService _service;
+    private readonly IMapper _mapper;
     private readonly IValidator<RegisterBookRequestJson> _validatorRegisterBook;
     public BookController(IBookService service, 
-        IValidator<RegisterBookRequestJson> validatorRegisterBook)
+        IValidator<RegisterBookRequestJson> validatorRegisterBook, 
+        IMapper mapper)
     {
         _service = service; 
-        _validatorRegisterBook = validatorRegisterBook; 
+        _validatorRegisterBook = validatorRegisterBook;
+        _mapper = mapper; 
     }    
 
     [HttpPost]
@@ -51,13 +60,26 @@ public class BookController : BookPublisherController
     }
 
     [HttpGet]
-    public async Task<ActionResult> GetAllBooks()
+    public ActionResult GetAllBooks([FromQuery] BookParameters bookParameters)
     {
-        var response = await _service.GetAllAsync(); 
-        if(!response.Any())
+        var books = _service.GetAllAsync(bookParameters);
+        if(!books.Any())
         {
             return NoContent();
         }
+
+        var metadata = new 
+        {
+            books.TotlaCount,
+            books.PageSize,
+            books.CurrentPage,
+            books.TotalPages,
+            books.HasPrevious,
+            books.HasNext
+        };
+
+        Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(metadata));
+        var response = _mapper.Map<IEnumerable<GetBookResponseJson>>(books);
         return Ok(response);
     }
 
