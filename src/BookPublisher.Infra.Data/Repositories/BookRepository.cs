@@ -1,5 +1,6 @@
 using BookPublisher.Domain.Entities;
 using BookPublisher.Domain.Interfaces;
+using BookPublisher.Domain.Pagination;
 using BookPublisher.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,9 +20,11 @@ public class BookRepository : IBookRepository
         return book; 
     }
 
-    public async Task<IEnumerable<Book>> GetAllAsync()
+    public PagedList<Book> GetAllAsync(BookParameters bookParameters)
     {
-        return await _context.Books.AsNoTracking().ToListAsync(); 
+        var items = _context.Set<Book>().AsNoTracking();
+        return PagedList<Book>.ToPagedList(items.OrderBy(b => b.Title),
+            bookParameters.PageNumber, bookParameters.PageSize);
     }
 
     public Task<Book> GetByIdAsync(long id)
