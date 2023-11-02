@@ -55,6 +55,7 @@ public static class DependencyInjection
         services.AddScoped<IAuthenticationService, AuthenticationService>();
         services.AddHttpContextAccessor();
         services.AddScoped<IUserLoggedService, UserLoggedService>();
+        services.AddScoped<IFileService, FileService>();
     }
 
     private static void AddMapper(this IServiceCollection services)
